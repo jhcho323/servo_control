@@ -1,0 +1,303 @@
+<html>
+<head>
+  <title>Evernote Export</title>
+  <basefont face="Segoe UI" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/308626 (ko-KR, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: Segoe UI;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="4851"/>
+
+<div><span>
+  <div style="--en-clipped-content:article">
+<div><br/></div><div style="font-size: 16px; display:block; min-width: 100%; position: relative;"> <div><div style="background:rgb(255, 255, 255);text-size-adjust:none;font-size:14px;line-height:1.5;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;color:rgb(102, 102, 102);"><div style="min-width:884px;transition:padding-left 0.2s ease-in-out 0s;"><div><div><div>
+
+					
+
+					
+
+					
+						
+
+
+						
+							<h2 style="font-size:1.62em;margin:0px;padding:0px;overflow:hidden;position:absolute;width:0px;line-height:0;text-indent:-9999px;">[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어 본문</h2>
+							<div style="padding:0px;padding-bottom:15px;border-bottom:1px solid rgb(239, 239, 239);margin:0px 0px 30px;">
+								<strong><a href="https://inmile.tistory.com/category/OSHW/Raspberry%20Pi" style="text-decoration:none;font-weight:700;font-size:16px;color:rgb(107, 172, 206);">OSHW/Raspberry Pi</a></strong>
+								<h3 style="margin:0px;font-weight:normal;line-height:43px;color:rgb(34, 34, 34);font-size:34px;padding:5px 0px 10px;">[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어</h3>
+								<span style="font-size:13px;color:rgb(167, 167, 167);">김찰수
+                                <span style="display:inline-block;width:1px;height:9px;background-color:rgb(235, 235, 235);margin:0px 9px 0px 5px;"></span>2017. 10. 28. 15:00
+								
+							</span>
+							</div>
+
+							<div style="margin:0px;padding:0px;color:rgb(92, 92, 92);overflow-wrap:break-word;">
+								<div style="margin:0px;padding:0px;"><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">라즈베리파이3 에서 WiringPi를 사용하여</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">GPIO pin을 PWM으로 동작시켜 서보 모터를 제어해 본다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">WiringPi 설치 방법은 다음을 참고한다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><span style="color:rgba(0, 0, 0, 0.87);font-family:&quot;Roboto Slab&quot;, &quot;Times New Roman&quot;, serif;font-size:14px;font-variant-ligatures:none;white-space:pre-wrap;background-color:rgb(250, 250, 250);"><a href="http://inmile.tistory.com/7" style="text-decoration:none;color:rgb(107, 172, 206);" target="_blank"><span style="font-family:&quot;맑은 고딕&quot;, sans-serif;font-size:12pt;">라즈베리파이3에 WiringPi 설치하기</span></a></span><br style="color:rgba(0, 0, 0, 0.87);font-family:&quot;Roboto Slab&quot;, &quot;Times New Roman&quot;, serif;font-size:14px;font-variant-ligatures:none;white-space:pre-wrap;background-color:rgb(250, 250, 250);"/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">1. 서보 모터 연결</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">사용할 서보 모터는 <b>SG90</b>으로 다음과 같은 3개 pin 구성을 가진다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:center;clear:none;float:none;"><span style="display:inline-block;width:400px;height:auto;max-width:100%;"><span style="cursor:pointer;"><img src="[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어_files/99B53E3359F404E42A" type="image/png" data-filename="99B53E3359F404E42A" height="282" style="border:0px none;cursor:pointer;max-width:100%;height:auto;" width="400"/></span></span></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">위 정보를 이용해 라즈베리파이3 에 연결한다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">* 서보 모터의 케이블을 각 핀에 개별 연결하기 위해 점퍼 케이블을 사용했다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:center;clear:none;float:none;"><span style="display:inline-block;width:200px;height:auto;max-width:100%;"><img src="[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어_files/9952333359F40B070C" type="image/jpeg" data-filename="9952333359F40B070C" height="179" style="border:0px none;max-width:100%;height:auto;" width="200"/></span></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"> </p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:left;clear:none;float:none;">연결 정보는 다음과 같다.<br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:center;clear:none;float:none;"><span style="display:inline-block;width:320px;height:auto;max-width:100%;"><span style="cursor:pointer;"><img src="[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어_files/99F8E73359F40B9210" type="image/png" data-filename="99F8E73359F40B9210" height="164" style="border:0px none;cursor:pointer;max-width:100%;height:auto;" width="320"/></span></span></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">2. 예제 소스 작성</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">서모 모터를 제어하기 위한 예제 소스를 작성한다. (C언어)</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">softPwmCreate(), softPwmWrite()는 wiringPi 라이브러리에 속한 함수이며,</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">이를 사용하기 위해 관련 헤더파일을 include 해 준다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p>
+<pre style="overflow:auto;background-color:rgb(246, 247, 248);overflow-wrap:break-word;font-family:Menlo, Consolas, Monaco, monospace;font-size:14px;line-height:20px;margin:28px auto;padding:16px;"><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">$ vi test_servo.c</p></pre><pre style="overflow:auto;background-color:rgb(246, 247, 248);overflow-wrap:break-word;font-family:Menlo, Consolas, Monaco, monospace;font-size:14px;line-height:20px;margin:28px auto;padding:16px;">// 예제 소스 작성
+<span><span>#include &lt;stdio.h&gt;
+#include &lt;wiringPi.h&gt;
+#include &lt;softPwm.h&gt; <span>
+
+#define SERVO 1
+
+int main()
+{
+    char sel;
+
+    if(wiringPiSetup()==-1)
+        return 1;
+
+    softPwmCreate(SERVO, 0, 200);
+
+    while(1)
+    {   
+        fputs(&quot;select c, r, l, q: &quot; , stdout);
+        scanf(&quot;%c&quot; , &amp;sel);
+        getchar();
+        if(sel == 'c') softPwmWrite(SERVO,15);   // 0 degree
+        else if(sel == 'r') softPwmWrite(SERVO,24); // 90 degree
+        else if(sel == 'l') softPwmWrite(SERVO,5); // -90 degree
+        else if(sel == 'q') return 0;
+    }   
+
+    return 0;
+}
+</span></span></span></pre><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">3. 예제 소스 컴파일 및 실행</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">작성한 예제 소스를 컴파일한다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">컴파일 시 wiringPi 라이브러리를 지정해 주어야 한다.</p>
+<pre style="overflow:auto;background-color:rgb(246, 247, 248);overflow-wrap:break-word;font-family:Menlo, Consolas, Monaco, monospace;font-size:14px;line-height:20px;margin:28px auto;padding:16px;"><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">// 소스 컴파일</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">$ gcc test_servo.c -o test_servo –lwiringPi</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">// 실행
+$ ./test_servo
+select c, r, l, q: r
+</p></pre><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">r 을 입력하면 PWM 신호가 입력되고, 이에 따라 서보 모터는 +90도로 회전하게 된다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">마찬가지로 각각 c, l을 입력하면 0도, -90도로 움직이는 것을 확인할 수 있다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">4. PWM 신호 확인</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">예제 소스를 통해 PWM 제어를 했을 때 실제로 신호가 잘 나오는지 오실로 스코프로 확인해본다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">서보 모터 연결을 제거한 뒤</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;">라즈베리파이의 6번 pin(GND)에 그라운드를 연결하고 12번 pin(GPIO18)을 찍어 본다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:center;clear:none;float:none;"><span style="display:inline-block;width:250px;height:auto;max-width:100%;"><span style="cursor:pointer;"><img src="[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어_files/995BD83359F41C6601" type="image/png" data-filename="995BD83359F41C6601" height="364" style="border:0px none;cursor:pointer;max-width:100%;height:auto;" width="250"/></span></span>        <span style="display:inline-block;width:320px;height:auto;max-width:100%;"><span style="cursor:pointer;"><img src="[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어_files/995A4B3359F41C6733" type="image/png" data-filename="995A4B3359F41C6733" height="243" style="border:0px none;cursor:pointer;max-width:100%;height:auto;" width="320"/></span></span></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:center;clear:none;float:none;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:center;clear:none;float:none;"></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:left;clear:none;float:none;">위 사진과 같이 PWM 파형이 나오는 것을 확인할 수 있다.</p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;text-align:left;clear:none;float:none;"><br/></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"></p><p style="padding:0px;font-size:16px;line-height:28px;margin:0px auto 28px;padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;"><br/></p><div style="margin:0px;position:relative;clear:both;padding:35px 0px;">
+    <div style="letter-spacing:normal;margin:0px;float:left;border-radius:16px;border:1px solid rgba(185, 185, 185, 0.5);padding:0px 9px;font-size:0px;">
+        
+    
+    <div style="letter-spacing:normal;margin:0px;padding:0px;float:left;position:relative;"></div>
+    
+        <div style="letter-spacing:normal;margin:0px;padding:0px;float:left;position:relative;">
+    
+</div>
+                <div style="letter-spacing:normal;margin:0px;padding:0px;float:left;position:relative;">
+    
+</div>
+    </div>
+    
+    <div style="letter-spacing:normal;margin:0px;padding:0px;float:right;position:relative;padding-top:8px;">
+    <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ko" style="letter-spacing:normal;color:rgb(51, 51, 51);text-decoration:none;display:block;height:16px;font-size:0px;" target="_blank">
+        <span style="letter-spacing:normal;display:block;">
+            <span style="letter-spacing:normal;display:inline-block;overflow:hidden;background:url(https://t1.daumcdn.net/tistory_admin/static/admin/editor/ico_postbtn_190118.png) no-repeat;vertical-align:top;text-indent:-9999px;width:16px;height:16px;margin-left:2px;background-position:0px -40px;">저작자표시</span><span style="letter-spacing:normal;display:inline-block;overflow:hidden;background:url(https://t1.daumcdn.net/tistory_admin/static/admin/editor/ico_postbtn_190118.png) no-repeat;vertical-align:top;text-indent:-9999px;width:16px;height:16px;margin-left:2px;background-position:-20px -40px;">비영리</span>        </span>
+    </a>
+</div>
+    
+<span style="display:block;clear:both;"></span></div><div style="border:1px solid rgb(229, 229, 229);clear:both;margin:10px 0px;padding:10px 10px 5px;border-color:rgb(229, 229, 229);">
+<h4 style="line-height:30px;border-bottom:1px solid rgb(229, 229, 229);font-size:12px;margin:0px;padding:2px 0px 6px;border-color:rgb(229, 229, 229);color:rgb(115, 115, 115);">'<a href="https://inmile.tistory.com/category/OSHW" style="text-decoration:none;font-weight:bold;color:rgb(115, 115, 115);">OSHW</a> &gt; <a href="https://inmile.tistory.com/category/OSHW/Raspberry%20Pi" style="text-decoration:none;font-weight:bold;color:rgb(115, 115, 115);">Raspberry Pi</a>' 카테고리의 다른 글</h4>
+<table style="font-size:inherit;font-weight:inherit;font-style:inherit;font-variant:inherit;max-width:100%;table-layout:fixed;border-collapse:collapse;width:100%;margin-top:10px;color:rgb(144, 144, 144);">
+<tbody style="color:rgb(144, 144, 144);"><tr style="color:rgb(144, 144, 144);">
+<th style="margin:0px;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:left;font-weight:normal;word-break:break-all;overflow:hidden;line-height:1.5;padding:0px 0px 4px;font-size:12px;color:rgb(144, 144, 144);">
+<a href="https://inmile.tistory.com/17?category=793890" style="font-weight:normal;text-decoration:none;color:rgb(144, 144, 144);border:none;">[RaspberryPi3] Pi camera 사용 - 연결 및 테스트</a>  <span style="text-decoration:none;font:10px Tahoma, sans-serif;color:rgb(144, 144, 144);border:none;">(0)</span>
+</th>
+<td style="margin:0px;line-height:1.5;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:right;width:80px;font-size:11px;padding:0px 0px 4px;color:rgb(144, 144, 144);">
+2017.10.28</td>
+</tr>
+<tr style="color:rgb(144, 144, 144);">
+<th style="margin:0px;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:left;font-weight:normal;word-break:break-all;overflow:hidden;line-height:1.5;padding:0px 0px 4px;font-size:12px;color:rgb(144, 144, 144);">
+<a href="https://inmile.tistory.com/11?category=793890" style="font-weight:normal;text-decoration:none;color:rgb(144, 144, 144);border:none;">[RaspberryPi3] 블루투스 사용하기 (Command line)</a>  <span style="text-decoration:none;font:10px Tahoma, sans-serif;color:rgb(144, 144, 144);border:none;">(3)</span>
+</th>
+<td style="margin:0px;line-height:1.5;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:right;width:80px;font-size:11px;padding:0px 0px 4px;color:rgb(144, 144, 144);">
+2017.10.28</td>
+</tr>
+<tr style="color:rgb(144, 144, 144);">
+<th style="margin:0px;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:left;font-weight:normal;word-break:break-all;overflow:hidden;line-height:1.5;padding:0px 0px 4px;font-size:12px;color:rgb(144, 144, 144);">
+<a href="https://inmile.tistory.com/9?category=793890" style="font-weight:normal;text-decoration:none;color:rgb(144, 144, 144);border:none;">[RaspberryPi3] Servoblaster를 이용한 서보 모터 제어</a>  <span style="text-decoration:none;font:10px Tahoma, sans-serif;color:rgb(144, 144, 144);border:none;">(2)</span>
+</th>
+<td style="margin:0px;line-height:1.5;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:right;width:80px;font-size:11px;padding:0px 0px 4px;color:rgb(144, 144, 144);">
+2017.10.28</td>
+</tr>
+<tr style="color:rgb(144, 144, 144);">
+<th style="margin:0px;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:left;font-weight:normal;word-break:break-all;overflow:hidden;line-height:1.5;padding:0px 0px 4px;font-size:12px;color:rgb(144, 144, 144);">
+<a href="https://inmile.tistory.com/8?category=793890" style="font-weight:bold;border:none;color:rgb(144, 144, 144);border-bottom:1px solid;text-decoration:none;border-color:rgb(144, 144, 144);">[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어</a>  <span style="text-decoration:none;font:10px Tahoma, sans-serif;color:rgb(144, 144, 144);border:none;">(0)</span>
+</th>
+<td style="margin:0px;line-height:1.5;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:right;width:80px;font-size:11px;padding:0px 0px 4px;color:rgb(144, 144, 144);">
+2017.10.28</td>
+</tr>
+<tr style="color:rgb(144, 144, 144);">
+<th style="margin:0px;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:left;font-weight:normal;word-break:break-all;overflow:hidden;line-height:1.5;padding:0px 0px 4px;font-size:12px;color:rgb(144, 144, 144);">
+<a href="https://inmile.tistory.com/7?category=793890" style="font-weight:normal;text-decoration:none;color:rgb(144, 144, 144);border:none;">[RaspberryPi3] 라즈베리파이3에 WiringPi 설치하기</a>  <span style="text-decoration:none;font:10px Tahoma, sans-serif;color:rgb(144, 144, 144);border:none;">(1)</span>
+</th>
+<td style="margin:0px;line-height:1.5;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:right;width:80px;font-size:11px;padding:0px 0px 4px;color:rgb(144, 144, 144);">
+2017.10.28</td>
+</tr>
+<tr style="color:rgb(144, 144, 144);">
+<th style="margin:0px;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:left;font-weight:normal;word-break:break-all;overflow:hidden;line-height:1.5;padding:0px 0px 4px;font-size:12px;color:rgb(144, 144, 144);">
+<a href="https://inmile.tistory.com/6?category=793890" style="font-weight:normal;text-decoration:none;color:rgb(144, 144, 144);border:none;">[RaspberryPi3] 라즈베리파이3 - 라즈비안(Raspbian) OS 설치</a>  <span style="text-decoration:none;font:10px Tahoma, sans-serif;color:rgb(144, 144, 144);border:none;">(0)</span>
+</th>
+<td style="margin:0px;line-height:1.5;font-family:&quot;Spoqa Han Sans&quot;, sans-serif;text-align:right;width:80px;font-size:11px;padding:0px 0px 4px;color:rgb(144, 144, 144);">
+2017.10.27</td>
+</tr>
+</tbody></table></div></div>
+							</div>
+							<div style="margin:0px;padding:0px;margin-top:38px;">
+								
+
+								<strong style="overflow:hidden;position:absolute;width:0px;height:0px;line-height:0;text-indent:-9999px;">공유하기 링크</strong>
+								<ul style="margin:0px;padding:0px;list-style:none;height:32px;margin-top:57px;text-align:center;">
+									<li style="margin:0px;padding:0px;list-style:none;display:inline-block;"><a href="https://inmile.tistory.com/8?category=793890#none" style="text-decoration:none;overflow:hidden;line-height:0;background:url(https://tistory1.daumcdn.net/tistory/2742198/skin/images/ico_skin.png) 0px 0px no-repeat;text-indent:-9999px;color:rgb(167, 167, 167);display:inline-block;font-size:13px;width:32px;height:32px;margin:0px 4px;background-position:0px -30px;">페이스북</a></li>
+									<li style="margin:0px;padding:0px;list-style:none;display:inline-block;"><a href="https://inmile.tistory.com/8?category=793890#none" style="text-decoration:none;overflow:hidden;line-height:0;background:url(https://tistory1.daumcdn.net/tistory/2742198/skin/images/ico_skin.png) 0px 0px no-repeat;text-indent:-9999px;color:rgb(167, 167, 167);display:inline-block;font-size:13px;width:32px;height:32px;margin:0px 4px;background-position:-40px -30px;">카카오스토리</a></li>
+									<li style="margin:0px;padding:0px;list-style:none;display:inline-block;"><a href="https://inmile.tistory.com/8?category=793890#none" style="text-decoration:none;overflow:hidden;line-height:0;background:url(https://tistory1.daumcdn.net/tistory/2742198/skin/images/ico_skin.png) 0px 0px no-repeat;text-indent:-9999px;color:rgb(167, 167, 167);display:inline-block;font-size:13px;width:32px;height:32px;margin:0px 4px;background-position:-80px -30px;">트위터</a></li>
+								</ul>
+							</div>
+
+							
+								<div style="margin:0px;padding:0px;position:relative;width:820px;margin-top:54px;">
+									<strong style="font-weight:normal;font-size:20px;color:rgb(34, 34, 34);">'OSHW/Raspberry Pi' Related Articles</strong>
+									<ul style="margin:0px;padding:0px;list-style:none;overflow:hidden;margin-top:15px;">
+										
+											<li style="margin:0px;padding:0px;list-style:none;position:relative;float:left;margin-right:20px;">
+												<a href="https://inmile.tistory.com/11?category=793890" style="text-decoration:none;display:block;overflow:hidden;position:relative;width:185px;height:200px;margin:0px auto;border:1px solid rgb(232, 232, 232);background:rgb(250, 250, 250);font-size:13px;box-sizing:border-box;text-align:center;color:rgb(255, 255, 255);">
+													
+													<span style="display:-webkit-box;overflow:hidden;position:relative;left:0px;top:0px;z-index:10;max-height:80px;padding:27px 20px 0px;color:rgb(92, 92, 92);text-overflow:ellipsis;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow-wrap:break-word;">[RaspberryPi3] 블루투스 사용하기 (Command line)</span>
+													<span style="position:absolute;left:0px;bottom:20px;z-index:10;width:100%;color:rgb(167, 167, 167);">2017.10.28</span>
+													
+												</a>
+											</li>
+										
+											<li style="margin:0px;padding:0px;list-style:none;position:relative;float:left;margin-right:20px;">
+												<a href="https://inmile.tistory.com/9?category=793890" style="text-decoration:none;display:block;overflow:hidden;position:relative;margin:0px auto;background:rgb(250, 250, 250);font-size:13px;box-sizing:border-box;text-align:center;color:rgb(255, 255, 255);width:185px;height:200px;border:0px none;">
+													
+													<span style="position:absolute;left:0px;top:0px;width:100%;height:100%;">
+														<img src="[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어_files/9977583359F4203517" type="image/jpeg" data-filename="9977583359F4203517" height="200" style="border:0px none;" width="185"/>
+													</span>
+													
+													<span style="display:-webkit-box;overflow:hidden;position:relative;left:0px;top:0px;z-index:10;max-height:80px;padding:27px 20px 0px;text-overflow:ellipsis;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow-wrap:break-word;color:rgb(255, 255, 255);">[RaspberryPi3] Servoblaster를 이용한 서보 모터 제어</span>
+													<span style="position:absolute;left:0px;bottom:20px;z-index:10;width:100%;opacity:0.7;color:rgb(255, 255, 255);">2017.10.28</span>
+													<span style="position:absolute;left:0px;top:0px;width:100%;height:100%;background:rgb(0, 0, 0);opacity:0.4;display:block;"></span>
+												</a>
+											</li>
+										
+											<li style="margin:0px;padding:0px;list-style:none;position:relative;float:left;margin-right:20px;">
+												<a href="https://inmile.tistory.com/7?category=793890" style="text-decoration:none;display:block;overflow:hidden;position:relative;margin:0px auto;background:rgb(250, 250, 250);font-size:13px;box-sizing:border-box;text-align:center;color:rgb(255, 255, 255);width:185px;height:200px;border:0px none;">
+													
+													<span style="position:absolute;left:0px;top:0px;width:100%;height:100%;">
+														<img src="[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어_files/99DE423359F3F76936" type="image/png" data-filename="99DE423359F3F76936" height="200" style="border:0px none;" width="185"/>
+													</span>
+													
+													<span style="display:-webkit-box;overflow:hidden;position:relative;left:0px;top:0px;z-index:10;max-height:80px;padding:27px 20px 0px;text-overflow:ellipsis;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow-wrap:break-word;color:rgb(255, 255, 255);">[RaspberryPi3] 라즈베리파이3에 WiringPi 설치하기</span>
+													<span style="position:absolute;left:0px;bottom:20px;z-index:10;width:100%;opacity:0.7;color:rgb(255, 255, 255);">2017.10.28</span>
+													<span style="position:absolute;left:0px;top:0px;width:100%;height:100%;background:rgb(0, 0, 0);opacity:0.4;display:block;"></span>
+												</a>
+											</li>
+										
+											<li style="margin:0px;padding:0px;list-style:none;position:relative;float:left;margin-right:0px;">
+												<a href="https://inmile.tistory.com/6?category=793890" style="text-decoration:none;display:block;overflow:hidden;position:relative;margin:0px auto;background:rgb(250, 250, 250);font-size:13px;box-sizing:border-box;text-align:center;color:rgb(255, 255, 255);width:185px;height:200px;border:0px none;">
+													
+													<span style="position:absolute;left:0px;top:0px;width:100%;height:100%;">
+														<img src="[RaspberryPi3] WiringPi를 이용한 서보 모터 PWM 제어_files/990E933359F3383C03" type="image/png" data-filename="990E933359F3383C03" height="200" style="border:0px none;" width="185"/>
+													</span>
+													
+													<span style="display:-webkit-box;overflow:hidden;position:relative;left:0px;top:0px;z-index:10;max-height:80px;padding:27px 20px 0px;text-overflow:ellipsis;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow-wrap:break-word;color:rgb(255, 255, 255);">[RaspberryPi3] 라즈베리파이3 - 라즈비안(Raspbian) OS 설치</span>
+													<span style="position:absolute;left:0px;bottom:20px;z-index:10;width:100%;opacity:0.7;color:rgb(255, 255, 255);">2017.10.27</span>
+													<span style="position:absolute;left:0px;top:0px;width:100%;height:100%;background:rgb(0, 0, 0);opacity:0.4;display:block;"></span>
+												</a>
+											</li>
+										
+									</ul>
+									<a href="https://inmile.tistory.com/category/OSHW/Raspberry%20Pi" style="position:absolute;right:20px;top:10px;font-size:13px;border-bottom:1px solid rgb(167, 167, 167);color:rgb(167, 167, 167);text-decoration:none;">more</a>
+								</div>
+							
+
+							<div style="margin:0px;padding:0px;margin-top:51px;">
+								<strong style="font-weight:normal;font-size:20px;color:rgb(34, 34, 34);display:block;margin-bottom:14px;"><span>0</span>  Comments</strong>
+								<div style="margin:0px;padding:0px;">
+									
+
+									<div style="margin:0;padding:0px;">
+										<div style="margin:0px;border:0px none;border-top:1px solid rgb(232, 232, 232);background-color:rgb(250, 250, 250);position:relative;padding:20px;">
+											<span style="margin:0px;padding:0px;overflow:hidden;position:absolute;width:0px;height:0px;line-height:0;text-indent:-9999px;">댓글쓰기 폼</span>
+											
+												
+													<div style="margin:0px;padding:0px;overflow:hidden;margin-bottom:5px;">
+                                                    <span style="float:left;position:relative;margin-right:5px;">
+                                                        <span style="overflow:hidden;position:absolute;width:0px;height:0px;line-height:0;text-indent:-9999px;">이름</span>
+                                                        <span style="display:block;">
+                                                            
+                                                        </span>
+                                                    </span>
+														<span style="float:left;position:relative;">
+                                                        <span style="overflow:hidden;position:absolute;width:0px;height:0px;line-height:0;text-indent:-9999px;">비밀번호</span>
+                                                        <span style="display:block;">
+                                                            
+                                                        </span>
+                                                    </span>
+													</div>
+												
+												<div style="margin:0px;padding:0px;position:absolute;bottom:21px;right:93px;">
+                                                <span style="float:left;overflow:hidden;position:relative;height:36px;margin-right:14px;line-height:36px;">
+                                                    
+                                                    <span style="float:left;font-size:12px;color:rgb(92, 92, 92);cursor:pointer;">
+                                                        <span style="display:block;overflow:hidden;font-size:0px;line-height:0;background:url(https://tistory1.daumcdn.net/tistory/2742198/skin/images/ico_skin.png) 0px 0px no-repeat;text-indent:-9999px;position:absolute;top:10px;left:0px;width:19px;height:19px;background-position:-120px -30px;"></span>
+                                                        Secret
+                                                    </span>
+                                                </span>
+												</div>
+											
+
+											<div style="margin:0px;position:relative;border:1px solid rgb(232, 232, 232);background-color:rgb(255, 255, 255);padding:7px 12px;">
+												<span style="overflow:hidden;width:0px;height:0px;line-height:0;text-indent:-9999px;top:7px;left:12px;font-size:13px;color:rgb(167, 167, 167);position:absolute;">내용</span>
+												
+											</div>
+
+											<div style="margin:0px;padding:0px;float:right;margin-top:10px;">
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+						
+					
+
+					
+
+					
+
+					
+
+					
+
+					
+
+					
+						<div style="margin:0px;padding:0px;height:30px;margin-top:26px;text-align:center;">
+    					<span style="display:inline-block;overflow:hidden;">
+                            <a href="https://inmile.tistory.com/9?category=793890" style="text-decoration:none;float:left;margin-right:18px;line-height:30px;color:rgb(92, 92, 92);"><span style="overflow:hidden;font-size:0px;line-height:0;background:url(https://tistory1.daumcdn.net/tistory/2742198/skin/images/ico_skin.png) 0px 0px no-repeat;text-indent:-9999px;width:6px;height:10px;margin-right:8px;background-position:-140px -10px;display:inline-block;"></span>Prev</a>
+    						
+    							<a href="https://inmile.tistory.com/27?category=793890" style="color:rgb(51, 51, 51);text-decoration:none;"><span style="float:left;min-width:10px;height:30px;margin:0px 4px;padding:0px 10px;line-height:30px;color:rgb(92, 92, 92);">1</span></a>
+    						
+    							<a href="https://inmile.tistory.com/24?category=793890" style="color:rgb(51, 51, 51);text-decoration:none;"><span style="float:left;min-width:10px;height:30px;margin:0px 4px;padding:0px 10px;line-height:30px;color:rgb(92, 92, 92);">2</span></a>
+    						
+    							<a href="https://inmile.tistory.com/17?category=793890" style="color:rgb(51, 51, 51);text-decoration:none;"><span style="float:left;min-width:10px;height:30px;margin:0px 4px;padding:0px 10px;line-height:30px;color:rgb(92, 92, 92);">3</span></a>
+    						
+    							<a href="https://inmile.tistory.com/11?category=793890" style="color:rgb(51, 51, 51);text-decoration:none;"><span style="float:left;min-width:10px;height:30px;margin:0px 4px;padding:0px 10px;line-height:30px;color:rgb(92, 92, 92);">4</span></a>
+    						
+    							<a href="https://inmile.tistory.com/9?category=793890" style="color:rgb(51, 51, 51);text-decoration:none;"><span style="float:left;min-width:10px;height:30px;margin:0px 4px;padding:0px 10px;line-height:30px;color:rgb(92, 92, 92);">5</span></a>
+    						
+    							<a style="color:rgb(51, 51, 51);text-decoration:none;"><span style="float:left;min-width:10px;height:30px;margin:0px 4px;padding:0px 10px;line-height:30px;border-radius:30px;background-color:rgb(107, 172, 206);color:rgb(255, 255, 255);">6</span></a>
+    						
+    							<a href="https://inmile.tistory.com/7?category=793890" style="color:rgb(51, 51, 51);text-decoration:none;"><span style="float:left;min-width:10px;height:30px;margin:0px 4px;padding:0px 10px;line-height:30px;color:rgb(92, 92, 92);">7</span></a>
+    						
+    							<a href="https://inmile.tistory.com/6?category=793890" style="color:rgb(51, 51, 51);text-decoration:none;"><span style="float:left;min-width:10px;height:30px;margin:0px 4px;padding:0px 10px;line-height:30px;color:rgb(92, 92, 92);">8</span></a>
+    						
+                            <a href="https://inmile.tistory.com/7?category=793890" style="text-decoration:none;float:left;margin-left:18px;line-height:30px;color:rgb(92, 92, 92);">Next<span style="overflow:hidden;font-size:0px;line-height:0;background:url(https://tistory1.daumcdn.net/tistory/2742198/skin/images/ico_skin.png) 0px 0px no-repeat;text-indent:-9999px;width:6px;height:10px;margin-left:8px;background-position:-140px 0px;display:inline-block;"></span></a>
+    					</span>
+						</div>
+					
+				</div></div></div></div></div></div></div>
+</div>
+</span>
+</div></body></html> 
